@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
@@ -67,6 +68,11 @@ public class DeviceControlActivity extends Activity {
 
     private ArrayList<String> finalData = new ArrayList<>();
 
+    Handler myHandler = new Handler();
+
+    private int CURRENT_DATA_PACKET_NUMBER = 0;
+    private final int NUMBER_OF_DATA_PACKETS_TO_BE_RECIEVED = 15;
+
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -96,12 +102,15 @@ public class DeviceControlActivity extends Activity {
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            System.out.println("In onRecieve");
+
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 updateConnectionState(R.string.connected);
                 invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                System.out.println("in Disconnected");
                 mConnected = false;
                 updateConnectionState(R.string.disconnected);
                 invalidateOptionsMenu();
@@ -112,6 +121,21 @@ public class DeviceControlActivity extends Activity {
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));      //THIS IS WHERE DATA IS DISPLAYED FROM
                 finalData.add(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+
+                CURRENT_DATA_PACKET_NUMBER++;
+
+                System.out.println("In Extra data is true");
+            } else if( !BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)){
+                System.out.println("In Extra data not true");
+            }
+
+            if( CURRENT_DATA_PACKET_NUMBER >= NUMBER_OF_DATA_PACKETS_TO_BE_RECIEVED ){
+                Intent tempIntent = new Intent( DeviceControlActivity.this, AfterCharacteristics.class);
+                mBluetoothLeService.setCharacteristicNotification(
+                        mNotifyCharacteristic, false);
+                tempIntent.putExtra("DATA_ARRAY", finalData);
+                startActivity(tempIntent);
+
             }
         }
     };
@@ -143,6 +167,15 @@ public class DeviceControlActivity extends Activity {
                             mNotifyCharacteristic = characteristic;
                             mBluetoothLeService.setCharacteristicNotification(
                                     characteristic, true);
+//                            myHandler.postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    System.out.println( "FINAL DATA ARRAY" + finalData );   //putting the data into an array
+//                                    Intent tempIntent = new Intent( DeviceControlActivity.this, AfterCharacteristics.class);
+//                                    startActivity(tempIntent);
+//                                }
+//                            }, 10000);
+
                         }
                         return true;
                     }
@@ -154,6 +187,7 @@ public class DeviceControlActivity extends Activity {
         mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
         mDataField.setText(R.string.no_data);
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -175,7 +209,11 @@ public class DeviceControlActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-        System.out.println( "FINAL DATA ARRAY" + finalData );   //putting the data into an array
+
+
+
+
+
 
     }
 
@@ -289,7 +327,6 @@ public class DeviceControlActivity extends Activity {
             mGattCharacteristics.add(charas);
             gattCharacteristicData.add(gattCharacteristicGroupData);
 
-            System.out.println(mGattCharacteristics+ "!#!!#!##!#!####!###!##!#!#!#!#!!#!#!#!##!");
         }
 
         SimpleExpandableListAdapter gattServiceAdapter = new SimpleExpandableListAdapter(
