@@ -71,7 +71,7 @@ public class DeviceControlActivity extends Activity {
     Handler myHandler = new Handler();
 
     private int CURRENT_DATA_PACKET_NUMBER = 0;
-    private final int NUMBER_OF_DATA_PACKETS_TO_BE_RECIEVED = 15;
+    private final int NUMBER_OF_DATA_PACKETS_TO_BE_RECIEVED = 5;
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -131,10 +131,11 @@ public class DeviceControlActivity extends Activity {
 
             if( CURRENT_DATA_PACKET_NUMBER >= NUMBER_OF_DATA_PACKETS_TO_BE_RECIEVED ){
                 Intent tempIntent = new Intent( DeviceControlActivity.this, AfterCharacteristics.class);
-                mBluetoothLeService.setCharacteristicNotification(
-                        mNotifyCharacteristic, false);
-                tempIntent.putExtra("DATA_ARRAY", finalData);
+                //mBluetoothLeService.setCharacteristicNotification(
+                        //mNotifyCharacteristic, false);
+                tempIntent.putExtra("DATA_ARRAY", intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
                 startActivity(tempIntent);
+                //finish();
 
             }
         }
