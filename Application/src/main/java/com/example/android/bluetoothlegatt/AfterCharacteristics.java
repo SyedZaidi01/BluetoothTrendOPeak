@@ -1,11 +1,13 @@
 package com.example.android.bluetoothlegatt;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 
@@ -14,22 +16,32 @@ public class AfterCharacteristics extends AppCompatActivity {
 
     Handler handler = new Handler();
     Runnable r;
+    GraphView graphView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_characteristics);
 
-        r = new Runnable() {
-            public void run() {
-                System.out.println("Hello World");
-                Intent intent = getIntent();
-                String DATA_RECIEVED = intent.getExtras().getString("DATA_ARRAY");
-                System.out.println("DEBUGGING: In AfterCharac"+DATA_RECIEVED);
-                handler.postDelayed(this, 1000);
-            }
-        };
-        handler.postDelayed(r, 1000);
+
+        System.out.println("Hello World");
+        Intent intent = getIntent();
+        ArrayList<String> dataArray = intent.getExtras().getStringArrayList("DATA_ARRAY");
+
+        System.out.println(dataArray);
+
+        graphView = (GraphView) findViewById(R.id.graphView);
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+                new DataPoint(0, 1),
+                new DataPoint(1, 5),
+                new DataPoint(2, 3),
+                new DataPoint(3, 2),
+                new DataPoint(4, 6)
+        });
+
+        graphView.addSeries(series);
+
 
     }
 }
