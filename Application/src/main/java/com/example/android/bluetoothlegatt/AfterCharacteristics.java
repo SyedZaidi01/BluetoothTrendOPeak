@@ -32,13 +32,13 @@ public class AfterCharacteristics extends AppCompatActivity {
 
         graphView = (GraphView) findViewById(R.id.graphView);
 
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
+        DataPoint[] dataPoints = new DataPoint[dataArray.size()];
+
+        for ( int i = 0; i < dataArray.size(); i++){
+            dataPoints[i] = new DataPoint(i ,Integer.parseInt(dataArray.get(i)));
+        }
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>( dataPoints);
 
         graphView.addSeries(series);
 
