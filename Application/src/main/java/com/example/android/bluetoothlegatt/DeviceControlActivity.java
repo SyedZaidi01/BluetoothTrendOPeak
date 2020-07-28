@@ -72,7 +72,7 @@ public class DeviceControlActivity extends AppCompatActivity {
     Handler myHandler = new Handler();
 
     private int CURRENT_DATA_PACKET_NUMBER = 0;
-    private final int NUMBER_OF_DATA_PACKETS_TO_BE_RECIEVED = 5;
+    private final int NUMBER_OF_DATA_PACKETS_TO_BE_RECIEVED = 20;
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {

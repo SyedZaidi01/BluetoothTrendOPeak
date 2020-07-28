@@ -32,7 +32,17 @@ public class AfterCharacteristics extends AppCompatActivity {
 
         graphView = (GraphView) findViewById(R.id.graphView);
 
+        graphView.getViewport().setXAxisBoundsManual(true);
+        graphView.getViewport().setMinX(0);
+        graphView.getViewport().setMaxX(dataArray.size());
+
+        graphView.getViewport().setScalable(true);
+        graphView.getViewport().setScalableY(true);
+
+
         DataPoint[] dataPoints = new DataPoint[dataArray.size()];
+
+        System.out.println(dataArray+"dataArray");
 
         for ( int i = 0; i < dataArray.size(); i++){
             dataPoints[i] = new DataPoint(i ,Integer.parseInt(dataArray.get(i)));
@@ -43,5 +53,8 @@ public class AfterCharacteristics extends AppCompatActivity {
         graphView.addSeries(series);
 
 
+
+
     }
+
 }
