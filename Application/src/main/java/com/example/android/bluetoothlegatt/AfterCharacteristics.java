@@ -9,6 +9,10 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class AfterCharacteristics extends AppCompatActivity {
@@ -52,6 +56,42 @@ public class AfterCharacteristics extends AppCompatActivity {
 
         graphView.addSeries(series);
 
+
+        JSONObject jsonObject = new JSONObject();
+
+        try{
+            jsonObject.put("me", "abcdefg");
+            jsonObject.put("ti", 123467);
+
+            JSONObject jsonSecondObject = new JSONObject();
+
+
+            jsonSecondObject.put("se","HB");
+
+
+            jsonSecondObject.put("te","E");
+
+
+            jsonSecondObject.put("et", 1234567);
+
+
+            jsonSecondObject.put("fs", 1);
+
+
+            jsonSecondObject.put("si", 20);
+
+            jsonObject.put("ta", jsonSecondObject);
+
+            JSONArray array_data = new JSONArray(dataArray);
+
+            jsonObject.put("data", array_data);
+
+
+        }catch( JSONException ex){
+            System.out.println(ex.toString());
+        }
+
+        System.out.println(jsonObject+"JSON Object");
 
 
 
