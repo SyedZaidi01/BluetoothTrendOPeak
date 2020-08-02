@@ -13,6 +13,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AfterCharacteristics extends AppCompatActivity {
@@ -90,6 +96,18 @@ public class AfterCharacteristics extends AppCompatActivity {
         }catch( JSONException ex){
             System.out.println(ex.toString());
         }
+
+        File file = new File(getApplicationContext().getFilesDir(), "dataToSend.json");
+
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(jsonObject.toString());
+            bufferedWriter.close();
+        }catch( Exception ex ){
+            System.out.println(ex.toString());
+        }
+
 
         System.out.println(jsonObject+"JSON Object");
 
